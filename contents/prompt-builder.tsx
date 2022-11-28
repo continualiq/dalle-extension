@@ -171,7 +171,7 @@ const PromptBuilder = () => {
           <div className="flex w-full justify-between items-start">
             <div>
               <h1 className="mt-0 font-bold font-sans text-2xl mb-4">
-                Coalesce Sticker Bot — Get Your Custom DALL&middot;E 2 Sticker
+                Continual Sticker Bot — Get Your Custom DALL&middot;E 2 Sticker
               </h1>
               <p className="text-secondary font-sans text-gray-500">
                 DALL&middot;E is a product of OpenAI and is not affiliated with

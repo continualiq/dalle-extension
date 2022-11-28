@@ -106,7 +106,7 @@ def send_image_to_email(image_url: str, email: str):
 
     tweet_link = "https://twitter.com/intent/tweet?text={}".format(
         urllib.parse.quote_plus(
-            "Made with my #ContinualImagination and @OpenAI’s DALL-E 2 in the @continual_ai booth at #dbtCoalesce"
+            "Made with my #ContinualImagination and @OpenAI’s DALL-E 2 in the @continual_ai booth at #TMLS2022"
         )
     )
     message = Mail(
@@ -116,7 +116,7 @@ def send_image_to_email(image_url: str, email: str):
         html_content=dedent(
             f"""
             <p>Hey,</p>
-            <p>Thanks for coming by the Continual booth at dbt Coalesce 2022!</p>
+            <p>Thanks for coming by the Continual booth at TMLS 2022!</p>
             <p>We've attached your generated image to this email. Enjoy!</p>
             <p>Feel like sharing? <a href="{tweet_link}" target="_blank">Click</a> to Tweet your creation!</p>
             <p>Note: you will need to download your image and attach it to your tweet.</p>
@@ -211,25 +211,11 @@ def post(req: PrintRequest, background_tasks: BackgroundTasks):
         conn.close()
 
     should_print_now, image_urls = should_print()
-    if success and should_print_now:
-        background_tasks.add_task(do_print(image_urls))
+    do_print(image_urls)
 
     background_tasks.add_task(send_image_to_email(req.image_url, req.email))
 
     return {"success": success, "should_print_now": should_print_now}
-
-
-@app.on_event("startup")
-@repeat_every(seconds=60 * 5)  # 5 minutes
-def print_cron() -> None:
-    _, image_urls = should_print()
-    if len(image_urls) > BATCH_SIZE:
-        for i in range(0, len(image_urls), BATCH_SIZE):
-            do_print(image_urls[i : i + BATCH_SIZE])
-    elif len(image_urls) > 0:
-        do_print(image_urls)
-    else:
-        print("[CRON] No images to print. Checking again in 5 minutes.")
 
 
 def should_print() -> Tuple[bool, List[str]]:
@@ -357,8 +343,8 @@ def do_print(image_urls: List[str], mark_printed: bool = True):
                 cur.execute(
                     "UPDATE generated_images SET printed = true, file_name = ? WHERE image_url = ?",
                     (
-                        img,
                         img_filename,
+                        img,
                     ),
                 )
             conn.commit()

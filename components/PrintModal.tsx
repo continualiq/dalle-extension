@@ -38,6 +38,8 @@ const PrintModal: React.FC<PrintModalProps> = ({
   const [success, setSuccess] = useState(false)
   const [printingNow, setPrintingNow] = useState(false)
 
+  const [submitLoading, setSubmitLoading] = useState(false)
+
   const [modalOpen, setModalOpen] = useState(false)
 
   useTimeout(
@@ -270,13 +272,21 @@ const PrintModal: React.FC<PrintModalProps> = ({
             </div>
 
             {error && <span className="text-red-500">{error}</span>}
-
-            <button
-              className="bg-black rounded-[4px] text-white h-[46px] hover:opacity-60"
-              onClick={handleSubmit}>
-              Send and Print
-            </button>
-
+          
+            { submitLoading ? (
+              <button
+                className="bg-black rounded-[4px] text-white h-[46px] hover:opacity-60 disabled"
+                onClick={handleSubmit}>
+                Submitting ...
+              </button>
+            ) : (
+              <button
+                className="bg-black rounded-[4px] text-white h-[46px] hover:opacity-60"
+                onClick={handleSubmit}>
+                Send and Print
+              </button>
+            )}
+            
             <button
               className="w-full text-black hover:opacity-60"
               onClick={closeModal}>
